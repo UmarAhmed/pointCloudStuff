@@ -107,39 +107,38 @@ def LSP(p, pts):
 
     return p + t * n
 
+if __name__ == "__main__":
+    # Point cloud for the bean curve with noise
+    noise = 0.5
+
+    t = np.linspace(0, np.pi * 2, 500)
+    r = 10
+    x = r * np.cos(t) * (np.sin(t) ** 3 + np.cos(t) ** 3)
+    y = r * np.sin(t) * (np.sin(t) ** 3 + np.cos(t) ** 3)
+
+    x += np.random.uniform(low = -noise, high = noise, size = len(x))
+    y += np.random.uniform(low = -noise, high = noise, size = len(y))
+
+    z = np.stack( (x, y), 1)
 
 
-# Point cloud for the bean curve with noise
-noise = 0.5
-
-t = np.linspace(0, np.pi * 2, 500)
-r = 10
-x = r * np.cos(t) * (np.sin(t) ** 3 + np.cos(t) ** 3)
-y = r * np.sin(t) * (np.sin(t) ** 3 + np.cos(t) ** 3)
-
-x += np.random.uniform(low = -noise, high = noise, size = len(x))
-y += np.random.uniform(low = -noise, high = noise, size = len(y))
-
-z = np.stack( (x, y), 1)
+    # Project a bunch of lines showing a point and its projection onto the bean curve
 
 
-# Project a bunch of lines showing a point and its projection onto the bean curve
+    plt.figure(figsize=(20,10))
+    qs = np.random.uniform(-10, 15, size = (100, 2))
 
+    rp = []
+    for q in qs:
+        r = LSP(q, z)
+        rp.append(r)
 
-plt.figure(figsize=(20,10))
-qs = np.random.uniform(-10, 15, size = (100, 2))
+    for i in range(len(rp)):
+        r_x = rp[i][0]
+        r_y = rp[i][1]
+        plt.plot([qs[i][0], r_x], [qs[i][1], r_y])
 
-rp = []
-for q in qs:
-    r = LSP(q, z)
-    rp.append(r)
+    plt.scatter(x, y)
 
-for i in range(len(rp)):
-    r_x = rp[i][0]
-    r_y = rp[i][1]
-    plt.plot([qs[i][0], r_x], [qs[i][1], r_y])
-
-plt.scatter(x, y)
-
-plt.show()
+    plt.show()
 
