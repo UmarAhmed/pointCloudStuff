@@ -79,13 +79,16 @@ def LSP(p, pts):
             w_lim += (w_max - w_mean) / 2
 
         j = 0
+        noActive = True
         for i, _ in enumerate(pts):
             if active[i]:
                 if weights[j] < w_lim:
                     active[i] = False
+                else:
+                    noActive = True
                 j += 1
 
-        if j == 0:
+        if noActive:
             break
         k += 1
 
